@@ -12,36 +12,6 @@ const PORT = process.env.PORT || 8000;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*==========================================================================*
 
 // Middleware:
@@ -148,7 +118,7 @@ app.get('/',(req, res) => {
   })})
 
 
- /*==========================================================================*/
+ /*==========================================================================*
 
 
  const middlewareFunction1 = (req,res,next) =>{
@@ -181,10 +151,57 @@ app.get('/', (req, res) => {
   res.send('GET request to the homepage')
 })
 
+ /*==========================================================================*
+
+const middlewareFunction1 = (req,res,next) =>{
+
+    const skip = req.query.skip ?? false
 
 
+    req.customData = 'Custom Data'
+    res.customDataInResponse = 'Custom Data In Response'
+
+    if(skip){
+        next('route')
+    }else{
+        next()
+    }
+    
+}
+//
+const middlewareFunction2 = (req,res,next) =>{
+
+    // next()
+
+    res.send({
+        customData: [
+            req.customData,
+            res.customDataInResponse
+        ],
+        message: 'this is func2. first next() running'
+})}
+
+app.use([middlewareFunction1,middlewareFunction2]);
+
+app.get('/', (req, res) => {
+  res.send('GET request to the homepage')
+})
+
+ /*==========================================================================*/
 
 
+// const [middlewareFunction1,middlewareFunction2]=require('./middlewares/index.js')
+
+// const middlewareFunction = require('./middlewares/index.js')
+
+
+// app.use(middlewareFunction1,middlewareFunction2)
+app.use(require('./middlewares/'))
+
+app.get('/', (req, res) => {
+    res.send('GET request to the homepage')
+  })
+  
 
 
   app.listen(PORT, () => console.log("Running: http://127.0.0.1:" + PORT));
