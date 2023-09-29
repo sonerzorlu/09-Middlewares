@@ -9,6 +9,39 @@ const app = express();
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*==========================================================================*
 
 // Middleware:
@@ -34,6 +67,7 @@ app.get('/', (req, res) => {
 })})
 
 /* ------------------------------------------------------- */
+
 
 /*==========================================================================*
 
@@ -116,24 +150,41 @@ app.get('/',(req, res) => {
 
  /*==========================================================================*/
 
-const middlewareFunction1 = (req, res, next) => {
-  const skip = req.query.skip ?? false;
 
-  req.customData = "Custom Data";
-  res.customDataInResponse = "Custom Data In Response";
+ const middlewareFunction1 = (req,res,next) =>{
 
-  if (skip) {
-    next("route");
-  } else {
-    next();
-  }
-};
+    const skip = req.query.skip ?? false
+    req.customData = 'Custom Data'
+    res.customDataInResponse = 'Custom Data In Response'
 
+    if(skip){
+        console.log('next-route running')
+        next('route')
+    }else{
+        console.log('next running')
+        next()
+    }
+}
 //
-app.get("/", (req, res) => {
-  res.send({
-    message: "data transfared from middleware with ; req anda res , parameters",
-  });
-});
+ 
+// app.use(middlewareFunction1)
+app.use('/', middlewareFunction1)
+ 
+// 
+app.get('/*',(req, res) => {
+    res.send({
+            message: 'first route'
+  })})
+//
 
-app.listen(PORT, () => console.log("Running: http://127.0.0.1:" + PORT));
+app.get('/', (req, res) => {
+  res.send('GET request to the homepage')
+})
+
+
+
+
+
+
+
+  app.listen(PORT, () => console.log("Running: http://127.0.0.1:" + PORT));
